@@ -1,0 +1,276 @@
+Adatbázisok 2. zh1, 2021.03.29. 10.15
+
+A megoldásokat kérem, ebbe az állományba a feladatok után írják bele, majd
+csatolva küldjék el a nikovits@inf.elte.hu email címre.
+
+A papíros részbõl és a számítógépes részbõl is minimum 8 pont megszerzése
+minimális követlemény az 1-estõl különbözõ jegyhez.
+A ponthatárok a következõk lesznek: 24, 33, 42, 51.
+
+"Papíron" megoldandó feladatok
+========================================================================
+1. feladat (6 pont)
+Adott az alábbi B+ fa.
+Tegyük fel, hogy egy B+ fa blokkjaiba 3 kulcs fér el plusz 4 mutató. A kulcsok 
+különbözõek. Szúrjuk be a B+ fába az alábbi kulcsértékeket a megadott sorrendben:
+22, 75, 42 
+Adjuk meg a B+ fa minden olyan állapotát, amikor egy csomópont kettéosztására volt szükség.
+
+                           71
+               41|59                      81
+   15|32|36   41|44|52   59|68    71|74|78   81|87  
+------------------------------------------------------------------------
+Megoldás:
+
+22 Beszurasa
+                           71
+               41|59                      81
+   15|22|  32|36   41|44|52   59|68    71|74|78   81|87  
+
+                           71
+              32|41|59                      81
+   15|22|  32|36   41|44|52   59|68    71|74|78   81|87
+
+75 Beszurasa
+
+                           71
+              32|41|59                      81
+   15|22|  32|36   41|44|52   59|68    71|74  75|78   81|87
+
+                           71
+              32|41|59                      75|81
+   15|22|  32|36   41|44|52   59|68    71|74  75|78   81|87
+
+42 Beszurasa
+
+                           71
+              32|41|44|59                      75|81
+   15|22|  32|36   41|42 44|52   59|68    71|74  75|78   81|87
+
+                           44|71
+              32|41|             59               75|81
+   15|22|  32|36   41|42   44|52   59|68    71|74  75|78   81|87
+========================================================================
+
+
+2. feladat (6 pont)
+a) Tömörítsük a következõ bitvektort a szakaszhossz kódolással.
+   000000000000001000000000011
+
+b) Fejtsük vissza a következõ, szakaszhossz kódolással tömörített bitvektort:
+   001110101101110111
+
+64 32 16 8 4 2 1
+------------------------------------------------------------------------
+Megoldás:
+a) Tömörítsük a következõ bitvektort a szakaszhossz kódolással.
+   000000000000001 00000000001 1
+A nullaval kezdodo es 1re vegzodo reszeket nezzuk es megszamoljuk a nullak szamat.
+14,10,0
+14 j=4 1110 i= 1110 - 10 j=4 1110 i=1010 - 0 j=1 0 i=0
+11101110 11101010 00 -> 111011101110101000
+
+b) Fejtsük vissza a következõ, szakaszhossz kódolással tömörített bitvektort:
+   0 0 1110 1011 0 1 110 111
+Az elso nullat a nulladik biten talaljuk j= 0 -> i= 0
+A masodik nullat a negyedik biten talaljuk j= 4 -> i=11
+A harmadik nullat nulladik biten talaljuk j=0 -> i=1
+A negyedik nullat a harmadik biten talaljuk j=3 -> i=7
+0,11,1,7 a kodolt egeszek
+Visszafejtve: 10000000000010100000001
+
+========================================================================
+3. feladat (8 pont)
+Lineáris hasító index felépítése
+Tegyük fel, hogy egy blokkba 2 rekord fér el és a kosarak az alábbi rekordokat tartalmazzák:
+
+1000                 1111 
+----                 ----
+1100   0001   1010   1011
+0000   1001   0010   0011 
+----   ----   ----   ----
+ 00     01     10     11
+
+Az elõre megadott küszöbszám (rekordok száma/kosarak száma) legyen 2,9.
+Jelenleg n = 4 (a kosarak száma), i = 2 (bitek száma).
+Szúrjuk be az alábbi hasító értékkel rendelkezõ sorokat egymás után, és minden újabb 
+kosár létrehozása után rajzoljuk le az adatszerkezetet.
+
+0100, 1110, 0111, 0110
+------------------------------------------------------------------------
+Megoldás:
+
+--> 0100
+
+0100
+1000                 1111 
+----                 ----
+1100   0001   1010   1011
+0000   1001   0010   0011 
+----   ----   ----   ----
+ 00     01     10     11
+
+--> 1110 (Beszuras utan uj kosarat hozunk letre, i=3 lesz)
+
+		1110	1111
+		----	----
+1000	0001	1010	1011	1100
+0000	1001	0010	0011	0100
+----	----	----	----	----
+000	001	010	011	100
+
+--> 0111
+			0111
+		1110	1111
+		----	----
+1000	0001	1010	1011	1100
+0000	1001	0010	0011	0100
+----	----	----	----	----
+000	001	010	011	100
+
+--> 0110
+
+		0110	0111
+		1110	1111
+		----	----
+1000	0001	1010	1011	1100
+0000	1001	0010	0011	0100
+----	----	----	----	----
+000	001	010	011	100
+
+========================================================================
+4. feladat (10 pont)
+Tekintsük a következõ paraméterekkel rendelkezõ relációt:
+T(R) = 1200000, V(R,A) = 100, V(R,B) = 500, bf(R)=50
+a) Számoljuk ki T(W)-t az egyenletességi feltételezéssel élve, ha W a következõ lekérdezés eredménye:
+   W <-- SELECT * FROM R WHERE A=x OR B=y; (ki kell számolni, a képlet nem elég)
+b) Számoljuk ki B(I)-t, ha I egy R-re létrehozott B+ fa index, amelyre bf(I) = 80?
+------------------------------------------------------------------------
+Megoldás:
+
+a)W <-- SELECT * FROM R WHERE A=x OR B=y;    -> T(R)*(1-[1-1/V(R,A)]*[1-1/V(R,B)])
+Átalakítás után:  V(R,A) -> v1, V(R,B) -> v2 
+T*[1-(1-1/v1)*(1-1/v2)] = T*[(v1*v2)/(v1*v2) - (v1-1)*(v2-1)/(v1*v2)] =
+= T*[(v1 + v2 -1)/(v1*v2)] = T/v1 + T/v2 - T/(v1*v2) = 
+= 1200000/100 + 1200000/500 - 1200000/(500*100) =
+= 12000 + 2400 - 24 = 14376
+
+b) T(R) = 1200000, bf(I) = 80? B(R)=1200000/50 = 24000
+Legalso level -> T(R)/bf(I) = 1200000/80=15000 (Suru index, az alattuk levok ritka indexek)
+Mindegyik annyi kulcs-mutato part tartalmaz, amennyi blokk az alatta levo szinten van
+2. szint : 15000/bf(I) = 188
+3. szint : 188/bf(I) = 3 
+4. szint : 3/bf(I) = 1
+Osszesen 15000+188+3+1 = 15192
+
+
+
+========================================================================
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+========================================================================
+Számítógépes, SQL, illetve PL/SQL-ben megoldandó feladatok.
+Ezeknél a feladatoknál a futtatás eredményét is kérem bemásolni a fájlba.
+
+------------------------------------------------------------------------
+5. feladat (10 pont) RESZBEN JO
+Adjuk meg a NIKOVITS felhasználó tulajdonában levõ hash clusterek nevét és méretét bájtban. (Név, Méret)
+
+------------------------------------------------------------------------
+Megoldás:
+SELECT SEGMENT_NAME HASH_CLUSTER_NEV,SUM(BYTES) MERET FROM DBA_SEGMENTS WHERE SEGMENT_NAME IN (SELECT cluster_name
+FROM dba_cluster_hash_expressions WHERE owner='NIKOVITS') 
+AND OWNER ='NIKOVITS'
+GROUP BY SEGMENT_NAME
+
+HASH_CLUSTER_NEV|MERET |
+----------------|------|
+CIKK_HCL2       |327680|
+
+------------------------------------------------------------------------
+HIVATALOS MEGOLDAS
+Megoldás: (Ullman)
+CIKK_HCL	589824
+CIKK_HCL2	327680
+CIKK_HCL3	327680
+========================================================================
+
+========================================================================
+6. feladat (10 pont)
+Írjunk meg egy PL/SQL függvényt, amelyik egy karakterláncban visszaadja a NIKOVITS felhasználó olyan tábláinak
+nevét (ábécé sorrendben, vesszõvel elválasztva), amelyeknek a 2. és 5. oszlopa ugyanolyan típusú. 
+A hossz és pontosság nem számít, az alaptípus legyen azonos.
+
+CREATE OR REPLACE FUNCTION tab_2_5 RETURN VARCHAR2 IS
+...
+SELECT tab_2_5() from dual;
+
+Ellenõrzési lehetõség:
+set serveroutput on
+EXECUTE check_plsql('tab_2_5()');
+------------------------------------------------------------------------
+Megoldás:
+CREATE OR REPLACE FUNCTION TAB_2_5 RETURN VARCHAR2 IS
+res VARCHAR2(3000):='';
+temp VARCHAR2(100):='';
+temp2 VARCHAR2(100):='';
+BEGIN
+	FOR rec IN (SELECT TABLE_NAME TABLA,COUNT(COLUMN_NAME) OSZLOP_SZAM 
+		FROM DBA_TAB_COLUMNS 
+		WHERE OWNER ='NIKOVITS' AND TABLE_NAME IN (SELECT OBJECT_NAME FROM DBA_OBJECTS WHERE OWNER='NIKOVITS' AND OBJECT_TYPE='TABLE')
+		GROUP BY TABLE_NAME
+		HAVING COUNT(COLUMN_NAME) > 4
+		ORDER BY TABLE_NAME ASC)
+LOOP
+FOR rec2 IN (SELECT DISTINCT d1.DATA_TYPE d1t ,d2.DATA_TYPE d2t
+				FROM DBA_TAB_COLUMNS d1, DBA_TAB_COLUMNS d2
+				WHERE d1.OWNER='NIKOVITS' AND d1.TABLE_NAME=d2.TABLE_NAME AND d1.TABLE_NAME=rec.TABLA  AND d1.COLUMN_ID=2 AND d2.COLUMN_ID=5)
+LOOP
+IF(rec2.d1t = rec2.d2t) THEN
+res:= CONCAT(res,CONCAT(rec.TABLA,','));
+END IF;
+END LOOP;
+END LOOP;
+
+  return SUBSTR(res,1,LENGTH(res)-1);
+END TAB_2_5;
+
+TAB_2_5()                                                      |
+---------------------------------------------------------------|
+EMPLOYEES,HALLGATOK,HIVAS,HIVAS_V2,LAPTOP,LOCATIONS,TEST_GRADES|
+========================================================================
+
+7. feladat (10 pont)
+Írjunk meg egy PL/SQL procedúrát, amelyik kiírja, hogy a NIKOVITS.CUSTOMERS táblának átlagosan hány sora 
+van egy blokkban, vagyis a (sorok száma)/(nemüres blokkok száma) értéket egy tizedesre kerekítve. (Átlag)
+
+CREATE OR REPLACE PROCEDURE bl_factor IS
+...
+set serveroutput on
+EXECUTE bl_factor();
+
+Ellenõrzési lehetõség:
+EXECUTE check_plsql('bl_factor()');
+------------------------------------------------------------------------
+Megoldás:
+CREATE OR REPLACE PROCEDURE BL_FACTOR IS
+temp VARCHAR2(1000);
+t1 FLOAT := 0.0;
+t2 FLOAT := 0.0;
+BEGIN
+	FOR rec IN (SELECT
+        dbms_rowid.rowid_block_number(ROWID) blokk,
+        COUNT(dbms_rowid.rowid_row_number(ROWID)) sor
+ FROM nikovits.customers
+ GROUP BY dbms_rowid.rowid_relative_fno(ROWID),dbms_rowid.rowid_block_number(ROWID)
+ ORDER BY dbms_rowid.rowid_relative_fno(ROWID),dbms_rowid.rowid_block_number(ROWID) ASC)
+ LOOP
+ 	t1:=t1+1;
+ 	t2:=t2+rec.sor;
+END LOOP;
+	temp:= ROUND(t2/t1,2);
+	DBMS_OUTPUT.put_line(temp);
+END;
+
+38.2
+========================================================================
+

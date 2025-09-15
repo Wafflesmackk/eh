@@ -1,0 +1,28 @@
+3
+be út,idő -> R
+ki sebesség ->R
+Előfeltétel idő>0, út=>0,
+Utófeltétel sebesség (m/s) -> s/t + sebesség (km/h) sebesség*3.6
+
+4
+be a -> R
+ki a'
+előfeltétel -
+utófeltétel a' = a + 1
+
+ BE a;
+ a := a + 1;
+ KI a;
+
+5
+be a,b ->R
+ki a',b' -> R
+Előfeltétel: -
+utófeltétel: b=a' a=b'
+
+BE a,be 
+Változó temp
+	temp :=a
+	a :=b
+	b := temp
+KI a,b

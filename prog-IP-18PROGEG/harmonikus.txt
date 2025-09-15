@@ -1,0 +1,11 @@
+for int i..n
+	h += 1/a[i]
+
+
+h = n / h
+
+
+bemenet : a[n] e R, n e N
+kimenet : h e R
+Elofeltetel a != 0
+Utofeltetel harmonikus kozep def.

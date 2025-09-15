@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1633684475 source:c:\prog\elteprog\gyakidk\main.cpp
+	<iostream>
+	<math.h>
+

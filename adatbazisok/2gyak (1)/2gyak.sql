@@ -1,0 +1,59 @@
+DROP TABLE SZERET; 
+
+CREATE TABLE SZERET
+    (NEV         VARCHAR2(15),
+     GYUMOLCS    VARCHAR2(15));
+
+INSERT INTO SZERET VALUES ('Malacka','alma');
+INSERT INTO SZERET VALUES ('Micimackó','alma');
+INSERT INTO SZERET VALUES ('Malacka','körte');
+INSERT INTO SZERET VALUES ('Micimackó','körte');
+INSERT INTO SZERET VALUES ('Kanga','körte');
+INSERT INTO SZERET VALUES ('Tigris','körte');
+INSERT INTO SZERET VALUES ('Micimackó','málna');
+INSERT INTO SZERET VALUES ('Malacka','málna');
+INSERT INTO SZERET VALUES ('Kanga','málna');
+INSERT INTO SZERET VALUES ('Tigris','málna');
+INSERT INTO SZERET VALUES ('Nyuszi','eper');
+INSERT INTO SZERET VALUES ('Malacka','eper');
+
+COMMIT;
+
+
+SELECT *
+FROM szeret;
+
+--1. feladat
+SELECT gyumolcs
+FROM szeret
+WHERE nev = 'Micimackó';
+
+--2. feladat
+SELECT gyumolcs
+FROM szeret
+MINUS
+SELECT gyumolcs
+FROM szeret
+WHERE nev = 'Micimackó';
+
+--3. feladat
+SELECT nev
+FROM szeret
+WHERE gyumolcs = 'alma';
+
+--4. feladat
+SELECT nev
+FROM szeret
+MINUS
+SELECT nev
+FROM szeret
+WHERE gyumolcs = 'körte';
+
+
+
+
+
+
+
+
+

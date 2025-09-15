@@ -1,0 +1,6 @@
+y = ax + b  a1 = a2; b1 = b2  párhuzamus a1,a2 metszi egyébként ->S
+BE a1,a2,b1,b2 ->R
+KI s -> S
+Előfeltétel
+Utófeltétel a1 = a2 és b1 = b2 -> s = "egyforma" és 
+(a1 = a2 és b1 != b2) -> s = "párhuzamos" és (a1 != a2)

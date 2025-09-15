@@ -1,0 +1,8 @@
+2021.11.01	1867	Uzsoki	375	71	Del-Pesti	303	37	Honved	215	57
+2021.11.02	2595	Uzsoki	154	46	Del-Pesti	303	72			
+2021.11.03	6268	Uzsoki	397	31	Del-Pesti	186	49			
+2021.11.04	6804	Uzsoki	218	36	Del-Pesti	177	10	Honved	319	84
+2021.11.05	7134	Uzsoki	222	68	Del-Pesti	385	92	Honved	169	50
+2021.11.06	6242	Uzsoki	388	5	Del-Pesti	379	73	Honved	375	45
+2021.11.07	4458	Uzsoki	276	33	Del-Pesti	249	57			
+2021.11.08	4588	Uzsoki	218	22	Del-Pesti	350	83	

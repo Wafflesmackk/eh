@@ -1,0 +1,308 @@
+5a
+
+Lekérdezés:
+
+EXPLAIN PLAN SET statement_id='ut5a'
+FOR
+
+SELECT /*+ no_index(p) no_index(c) no_index(sz) use_nl(p,c,sz) */COUNT(*)
+FROM nikovits.projekt p NATURAL JOIN nikovits.cikk c NATURAL JOIN nikovits.szallit sz
+WHERE c.szin = 'zold' AND p.pnev = 'Irodahaz';
+
+
+select plan_table_output from table(dbms_xplan.display('plan_table','ut5a','all'));
+
+
+
+Eredmény: 185
+
+Plan hash value: 1992530128
+ 
+--------------------------------------------------------------------------------
+| Id  | Operation            | Name    | Rows  | Bytes | Cost (%CPU)| Time     |
+--------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT     |         |     1 |    31 |  2630   (1)| 00:00:01 |
+|   1 |  SORT AGGREGATE      |         |     1 |    31 |            |          |
+|   2 |   NESTED LOOPS       |         |   207 |  6417 |  2630   (1)| 00:00:01 |
+|   3 |    NESTED LOOPS      |         |  1036 | 17612 |  1223   (1)| 00:00:01 |
+|*  4 |     TABLE ACCESS FULL| CIKK    |   104 |  1040 |     3   (0)| 00:00:01 |
+|*  5 |     TABLE ACCESS FULL| SZALLIT |    10 |    70 |    12   (0)| 00:00:01 |
+|*  6 |    TABLE ACCESS FULL | PROJEKT |     1 |    14 |     1   (0)| 00:00:01 |
+--------------------------------------------------------------------------------
+ 
+Query Block Name / Object Alias (identified by operation id):
+-------------------------------------------------------------
+ 
+   1 - SEL$9E43CB6E
+   4 - SEL$9E43CB6E / C@SEL$1
+   5 - SEL$9E43CB6E / SZ@SEL$2
+   6 - SEL$9E43CB6E / P@SEL$1
+ 
+Predicate Information (identified by operation id):
+---------------------------------------------------
+ 
+   4 - filter("C"."SZIN"='zold')
+   5 - filter("C"."CKOD"="SZ"."CKOD")
+   6 - filter("P"."PKOD"="SZ"."PKOD" AND "P"."PNEV"='Irodahaz')
+ 
+Column Projection Information (identified by operation id):
+-----------------------------------------------------------
+ 
+   1 - (#keys=0) COUNT(*)[22]
+   2 - (#keys=0) 
+   3 - (#keys=0) "SZ"."PKOD"[NUMBER,22]
+   4 - "C"."CKOD"[NUMBER,22]
+   5 - "SZ"."PKOD"[NUMBER,22]
+
+
+
+
+----------------------------------------------------------------------------------------------
+
+5b
+
+Lekérdezés:
+
+EXPLAIN PLAN SET statement_id='ut5b'
+FOR
+
+SELECT /*+ index(p) no_index(c) no_index(sz) use_hash(p,c,sz) */COUNT(*)
+FROM nikovits.projekt p NATURAL JOIN nikovits.cikk c NATURAL JOIN nikovits.szallit sz
+WHERE c.szin = 'zold' AND p.pnev = 'Irodahaz';
+
+
+select plan_table_output from table(dbms_xplan.display('plan_table','ut5b','all'));
+
+Eredmény: 185
+
+
+Plan hash value: 1847397847
+ 
+-------------------------------------------------------------------------------------------------
+| Id  | Operation                             | Name    | Rows  | Bytes | Cost (%CPU)| Time     |
+-------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT                      |         |     1 |    31 |    18   (0)| 00:00:01 |
+|   1 |  SORT AGGREGATE                       |         |     1 |    31 |            |          |
+|*  2 |   HASH JOIN                           |         |   207 |  6417 |    18   (0)| 00:00:01 |
+|*  3 |    TABLE ACCESS BY INDEX ROWID BATCHED| PROJEKT |     6 |    84 |     2   (0)| 00:00:01 |
+|   4 |     INDEX FULL SCAN                   | P_PKOD  |    30 |       |     1   (0)| 00:00:01 |
+|*  5 |    HASH JOIN                          |         |  1036 | 17612 |    16   (0)| 00:00:01 |
+|*  6 |     TABLE ACCESS FULL                 | CIKK    |   104 |  1040 |     3   (0)| 00:00:01 |
+|   7 |     TABLE ACCESS FULL                 | SZALLIT | 10000 | 70000 |    13   (0)| 00:00:01 |
+-------------------------------------------------------------------------------------------------
+ 
+Query Block Name / Object Alias (identified by operation id):
+-------------------------------------------------------------
+ 
+   1 - SEL$9E43CB6E
+   3 - SEL$9E43CB6E / P@SEL$1
+   4 - SEL$9E43CB6E / P@SEL$1
+   6 - SEL$9E43CB6E / C@SEL$1
+   7 - SEL$9E43CB6E / SZ@SEL$2
+ 
+Predicate Information (identified by operation id):
+---------------------------------------------------
+ 
+   2 - access("P"."PKOD"="SZ"."PKOD")
+   3 - filter("P"."PNEV"='Irodahaz')
+   5 - access("C"."CKOD"="SZ"."CKOD")
+   6 - filter("C"."SZIN"='zold')
+ 
+Column Projection Information (identified by operation id):
+-----------------------------------------------------------
+ 
+   1 - (#keys=0) COUNT(*)[22]
+   2 - (#keys=1; rowset=1019) 
+   3 - "P"."PKOD"[NUMBER,22]
+   4 - "P".ROWID[ROWID,10], "P"."PKOD"[NUMBER,22]
+   5 - (#keys=1; rowset=256) "SZ"."PKOD"[NUMBER,22]
+
+
+
+--------------------------------------------------------------------------------------------------------------------------
+5c
+
+Lekérdezés:
+EXPLAIN PLAN SET statement_id='ut5c'
+FOR
+
+SELECT /*+ index(p) index(c) no_index(sz) use_merge(p,c,sz) */COUNT(*)
+FROM nikovits.projekt p NATURAL JOIN nikovits.cikk c NATURAL JOIN nikovits.szallit sz
+WHERE c.szin = 'zold' AND p.pnev = 'Irodahaz';
+
+select plan_table_output from table(dbms_xplan.display('plan_table','ut5c','all'));
+
+
+Eredmény:
+185
+
+Plan hash value: 1039810542
+ 
+--------------------------------------------------------------------------------------------------
+| Id  | Operation                              | Name    | Rows  | Bytes | Cost (%CPU)| Time     |
+--------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT                       |         |     1 |    31 |    24  (13)| 00:00:01 |
+|   1 |  SORT AGGREGATE                        |         |     1 |    31 |            |          |
+|   2 |   MERGE JOIN                           |         |   207 |  6417 |    24  (13)| 00:00:01 |
+|   3 |    SORT JOIN                           |         |  2000 | 42000 |    17  (12)| 00:00:01 |
+|   4 |     MERGE JOIN                         |         |  2000 | 42000 |    16   (7)| 00:00:01 |
+|*  5 |      TABLE ACCESS BY INDEX ROWID       | PROJEKT |     6 |    84 |     2   (0)| 00:00:01 |
+|   6 |       INDEX FULL SCAN                  | P_PKOD  |    30 |       |     1   (0)| 00:00:01 |
+|*  7 |      SORT JOIN                         |         | 10000 | 70000 |    14   (8)| 00:00:01 |
+|   8 |       TABLE ACCESS FULL                | SZALLIT | 10000 | 70000 |    13   (0)| 00:00:01 |
+|*  9 |    SORT JOIN                           |         |   104 |  1040 |     7  (15)| 00:00:01 |
+|  10 |     TABLE ACCESS BY INDEX ROWID BATCHED| CIKK    |   104 |  1040 |     6   (0)| 00:00:01 |
+|* 11 |      INDEX RANGE SCAN                  | C_SZIN  |   104 |       |     1   (0)| 00:00:01 |
+--------------------------------------------------------------------------------------------------
+ 
+Query Block Name / Object Alias (identified by operation id):
+-------------------------------------------------------------
+ 
+   1 - SEL$9E43CB6E
+   5 - SEL$9E43CB6E / P@SEL$1
+   6 - SEL$9E43CB6E / P@SEL$1
+   8 - SEL$9E43CB6E / SZ@SEL$2
+  10 - SEL$9E43CB6E / C@SEL$1
+  11 - SEL$9E43CB6E / C@SEL$1
+ 
+Predicate Information (identified by operation id):
+---------------------------------------------------
+ 
+   5 - filter("P"."PNEV"='Irodahaz')
+   7 - access("P"."PKOD"="SZ"."PKOD")
+       filter("P"."PKOD"="SZ"."PKOD")
+   9 - access("C"."CKOD"="SZ"."CKOD")
+       filter("C"."CKOD"="SZ"."CKOD")
+  11 - access("C"."SZIN"='zold')
+ 
+Column Projection Information (identified by operation id):
+-----------------------------------------------------------
+ 
+   1 - (#keys=0) COUNT(*)[22]
+   2 - (#keys=0) 
+   3 - (#keys=1) "SZ"."CKOD"[NUMBER,22]
+   4 - (#keys=0) "SZ"."CKOD"[NUMBER,22]
+   5 - "P"."PKOD"[NUMBER,22]
+   6 - "P".ROWID[ROWID,10], "P"."PKOD"[NUMBER,22]
+   7 - (#keys=1) "SZ"."PKOD"[NUMBER,22], "SZ"."CKOD"[NUMBER,22]
+   8 - "SZ"."CKOD"[NUMBER,22], "SZ"."PKOD"[NUMBER,22]
+   9 - (#keys=1) "C"."CKOD"[NUMBER,22]
+  10 - "C"."CKOD"[NUMBER,22]
+
+
+
+--------------------------------------------------------------------------------------------------------------------------
+6 feladat
+6a:
+
+Lekérdezés:
+
+EXPLAIN PLAN SET statement_id='ut6a'
+FOR
+
+SELECT /*+ full(c) index(szt) use_hash(c,szt) USE_HASH_AGGREGATION */ SUM(szt.mennyiseg),c.ckod
+FROM  nikovits.szallit szt, nikovits.cikk c
+WHERE c.ckod = szt.ckod AND szt.mennyiseg > 2
+GROUP BY c.ckod having c.ckod > 960
+ORDER BY c.ckod;
+
+
+select plan_table_output from table(dbms_xplan.display('plan_table','ut6a','all'));
+
+
+Eredmény:
+Plan hash value: 677803935
+ 
+----------------------------------------------------------------------------------------------------
+| Id  | Operation                               | Name     | Rows  | Bytes | Cost (%CPU)| Time     |
+----------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT                        |          |    40 |   440 |  8754   (1)| 00:00:01 |
+|   1 |  SORT ORDER BY                          |          |    40 |   440 |  8754   (1)| 00:00:01 |
+|*  2 |   FILTER                                |          |       |       |            |          |
+|   3 |    HASH GROUP BY                        |          |    40 |   440 |  8754   (1)| 00:00:01 |
+|*  4 |     HASH JOIN                           |          |  9407 |   101K|  8753   (1)| 00:00:01 |
+|   5 |      TABLE ACCESS FULL                  | CIKK     |  1000 |  4000 |     3   (0)| 00:00:01 |
+|*  6 |      TABLE ACCESS BY INDEX ROWID BATCHED| SZALLIT  |  9407 | 65849 |  8750   (1)| 00:00:01 |
+|   7 |       INDEX FULL SCAN                   | SZT_CKOD | 10000 |       |    33   (0)| 00:00:01 |
+----------------------------------------------------------------------------------------------------
+ 
+Query Block Name / Object Alias (identified by operation id):
+-------------------------------------------------------------
+ 
+   1 - SEL$1
+   5 - SEL$1 / C@SEL$1
+   6 - SEL$1 / SZT@SEL$1
+   7 - SEL$1 / SZT@SEL$1
+ 
+Predicate Information (identified by operation id):
+---------------------------------------------------
+ 
+   2 - filter("C"."CKOD">960)
+   4 - access("C"."CKOD"="SZT"."CKOD")
+   6 - filter("SZT"."MENNYISEG">2)
+ 
+Column Projection Information (identified by operation id):
+-----------------------------------------------------------
+ 
+   1 - (#keys=1) "C"."CKOD"[NUMBER,22], SUM("SZT"."MENNYISEG")[22]
+   2 - (rowset=256) "C"."CKOD"[NUMBER,22], SUM("SZT"."MENNYISEG")[22]
+   3 - (#keys=1; rowset=256) "C"."CKOD"[NUMBER,22], SUM("SZT"."MENNYISEG")[22]
+   4 - (#keys=1; rowset=256) "C"."CKOD"[NUMBER,22], "SZT"."MENNYISEG"[NUMBER,22]
+   5 - (rowset=256) "C"."CKOD"[NUMBER,22]
+   6 - "SZT"."CKOD"[NUMBER,22], "SZT"."MENNYISEG"[NUMBER,22]
+   7 - "SZT".ROWID[ROWID,10], "SZT"."CKOD"[NUMBER,22]
+
+-------------------------------------------------------------------------------------------
+6b:
+Lekérdezés:
+EXPLAIN PLAN SET statement_id='ut6b'
+FOR
+
+SELECT /*+ full(szt) index(c) use_nl(c,szt) USE_HASH_AGGREGATION */ SUM(szt.mennyiseg),c.ckod
+FROM  nikovits.szallit szt, nikovits.cikk c
+WHERE c.ckod = szt.ckod AND szt.mennyiseg > 2
+GROUP BY c.ckod having c.ckod > 960
+ORDER BY c.ckod;
+
+
+select plan_table_output from table(dbms_xplan.display('plan_table','ut6b','all'));
+
+Eredmény:
+Plan hash value: 3101480805
+ 
+---------------------------------------------------------------------------------
+| Id  | Operation             | Name    | Rows  | Bytes | Cost (%CPU)| Time     |
+---------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT      |         |    40 |   440 |    15  (14)| 00:00:01 |
+|   1 |  SORT ORDER BY        |         |    40 |   440 |    15  (14)| 00:00:01 |
+|*  2 |   FILTER              |         |       |       |            |          |
+|   3 |    HASH GROUP BY      |         |    40 |   440 |    15  (14)| 00:00:01 |
+|   4 |     NESTED LOOPS      |         |  9407 |   101K|    14   (8)| 00:00:01 |
+|*  5 |      TABLE ACCESS FULL| SZALLIT |  9407 | 65849 |    13   (0)| 00:00:01 |
+|*  6 |      INDEX UNIQUE SCAN| C_CKOD  |     1 |     4 |     0   (0)| 00:00:01 |
+---------------------------------------------------------------------------------
+ 
+Query Block Name / Object Alias (identified by operation id):
+-------------------------------------------------------------
+ 
+   1 - SEL$1
+   5 - SEL$1 / SZT@SEL$1
+   6 - SEL$1 / C@SEL$1
+ 
+Predicate Information (identified by operation id):
+---------------------------------------------------
+ 
+   2 - filter("C"."CKOD">960)
+   5 - filter("SZT"."MENNYISEG">2)
+   6 - access("C"."CKOD"="SZT"."CKOD")
+ 
+Column Projection Information (identified by operation id):
+-----------------------------------------------------------
+ 
+   1 - (#keys=1) "C"."CKOD"[NUMBER,22], SUM("SZT"."MENNYISEG")[22]
+   2 - (rowset=256) "C"."CKOD"[NUMBER,22], SUM("SZT"."MENNYISEG")[22]
+   3 - (#keys=1; rowset=256) "C"."CKOD"[NUMBER,22], 
+       SUM("SZT"."MENNYISEG")[22]
+   4 - (#keys=0) "SZT"."MENNYISEG"[NUMBER,22], "C"."CKOD"[NUMBER,22]
+
+

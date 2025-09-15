@@ -1,0 +1,3 @@
+Venus first Breaker 3 3 3
+Earth second Lander 1 1 1
+Mars second Lander 3 2 1

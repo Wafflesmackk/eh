@@ -1,0 +1,8 @@
+commands node:
+npx model:generate --name idk --attributes name:string,count:integer,stb
+npx migratons  ----ezzel a help
+
+
+Database seederbnen
+faker--> faker.amikell.azonbelulamikell(min: x , max: y)
+image generation::

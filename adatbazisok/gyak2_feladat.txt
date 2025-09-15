@@ -1,0 +1,32 @@
+---SZERET---
+------------
+
+1. Melyek azok a gyümölcsök, amelyeket Micimackó szeret?
+2. Melyek azok a gyümölcsök, amelyeket Micimackó nem szeret? (de valaki más igen)
+3. Kik szeretik az almát?
+4. Kik nem szeretik a körtét? (de valami mást igen)
+5. Kik szeretik vagy az almát vagy a körtét?
+6. Kik szeretik az almát is és a körtét is?
+7. Kik azok, akik szeretik az almát, de nem szeretik a körtét?
+
+
+---DOLGOZO---
+-------------
+
+1. Kik azok a dolgozók, akiknek a fizetése nagyobb, mint 2800?
+2. Kik azok a dolgozók, akik a 10-es vagy a 20-as osztályon dolgoznak?
+3. Kik azok, akiknek a jutaléka nagyobb, mint 600?
+4. Kik azok, akiknek a jutaléka nem nagyobb, mint 600?
+5. Kik azok a dolgozók, akiknek a jutaléka ismeretlen (nincs kitöltve, vagyis NULL)?
+6. Adjuk meg a dolgozók között előforduló foglalkozások neveit.
+7. Adjuk meg azoknak a nevét és kétszeres fizetését, akik a 10-es osztályon dolgoznak.
+8. Kik azok a dolgozók, akik 1982.01.01 után léptek be a céghez?
+-------------
+9. Kik azok, akiknek nincs főnöke?
+10. Kik azok a dolgozók, akiknek a nevében van 'A' betű?
+11. Kik azok a dolgozók, akiknek a nevében van két 'L' betű?
+-------------
+12. Kik azok a dolgozók, akiknek a fizetése 2000 és 3000 között van?
+13. Adjuk meg a dolgozók adatait fizetés szerint növekvő sorrendben.
+14. Adjuk meg a dolgozók adatait fizetés szerint csökkenő, azon belül név szerinti sorrendben.
+15. Kik azok a dolgozók, akiknek a főnöke KING? (egyelőre leolvasva a képernyőről) 

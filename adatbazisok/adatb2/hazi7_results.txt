@@ -1,0 +1,69 @@
+LEKÉRDEZÉS + INDEX LÉTREHOZÁS + PLAN_TABLE SELECT:
+
+EXPLAIN PLAN SET statement_id='ut171c'
+   FOR 
+    SELECT osztaly.onev
+    FROM osztaly    
+    WHERE oazon IN (SELECT oazon FROM dolgozo,fiz_kat WHERE (fizetes between fiz_kat.also AND fiz_kat.felso) AND fiz_kat.kategoria = 1);
+    
+CREATE INDEX dolgozo_fizetes_idx
+ON dolgozo(fizetes);    
+    
+select plan_table_output from table(dbms_xplan.display('plan_table','ut171c','all'));
+
+
+
+LEKÉRDEZÉS OUTPUT:
+
+RESEARCH
+SALES
+MARKETING
+
+
+SELECT PLAN_TABLE OUTPUT:
+
+Plan hash value: 1108496080
+ 
+------------------------------------------------------------------------------------------------------
+| Id  | Operation                      | Name                | Rows  | Bytes | Cost (%CPU)| Time     |
+------------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT               |                     |     4 |   104 |     8   (0)| 00:00:01 |
+|*  1 |  HASH JOIN SEMI                |                     |     4 |   104 |     8   (0)| 00:00:01 |
+|   2 |   TABLE ACCESS FULL            | OSZTALY             |     5 |    65 |     3   (0)| 00:00:01 |
+|   3 |   VIEW                         | VW_NSO_1            |     9 |   117 |     5   (0)| 00:00:01 |
+|   4 |    NESTED LOOPS                |                     |     9 |   144 |     5   (0)| 00:00:01 |
+|   5 |     NESTED LOOPS               |                     |     9 |   144 |     5   (0)| 00:00:01 |
+|*  6 |      TABLE ACCESS FULL         | FIZ_KAT             |     1 |    10 |     3   (0)| 00:00:01 |
+|*  7 |      INDEX RANGE SCAN          | DOLGOZO_FIZETES_IDX |     6 |       |     1   (0)| 00:00:01 |
+|   8 |     TABLE ACCESS BY INDEX ROWID| DOLGOZO             |     9 |    54 |     2   (0)| 00:00:01 |
+------------------------------------------------------------------------------------------------------
+ 
+Query Block Name / Object Alias (identified by operation id):
+-------------------------------------------------------------
+ 
+   1 - SEL$5DA710D3
+   2 - SEL$5DA710D3 / OSZTALY@SEL$1
+   3 - SEL$683B0107 / VW_NSO_1@SEL$5DA710D3
+   4 - SEL$683B0107
+   6 - SEL$683B0107 / FIZ_KAT@SEL$2
+   7 - SEL$683B0107 / DOLGOZO@SEL$2
+   8 - SEL$683B0107 / DOLGOZO@SEL$2
+ 
+Predicate Information (identified by operation id):
+---------------------------------------------------
+ 
+   1 - access("OAZON"="OAZON")
+   6 - filter("FIZ_KAT"."KATEGORIA"=1)
+   7 - access("FIZETES">="FIZ_KAT"."ALSO" AND "FIZETES"<="FIZ_KAT"."FELSO")
+ 
+Column Projection Information (identified by operation id):
+-----------------------------------------------------------
+ 
+   1 - (#keys=1) "OSZTALY"."ONEV"[VARCHAR2,14]
+   2 - (rowset=256) "OAZON"[NUMBER,22], "OSZTALY"."ONEV"[VARCHAR2,14]
+   3 - "OAZON"[NUMBER,22]
+   4 - (#keys=0) "OAZON"[NUMBER,22]
+   5 - (#keys=0) "DOLGOZO".ROWID[ROWID,10]
+   6 - "FIZ_KAT"."ALSO"[NUMBER,22], "FIZ_KAT"."FELSO"[NUMBER,22]
+   7 - "DOLGOZO".ROWID[ROWID,10]
+   8 - "OAZON"[NUMBER,22]

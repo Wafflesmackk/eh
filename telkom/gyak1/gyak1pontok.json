@@ -1,0 +1,5 @@
+{
+    "HaziPont" : {"max" : 20, "elert" : 20, "min" : 0.5},
+    "ZHPont" : {"max" : 20, "elert" : 11, "min" : 0.5},
+    "mininetPont" : {"max" : 15, "min" : 0.5}
+}

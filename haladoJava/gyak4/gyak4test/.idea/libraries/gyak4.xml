@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="gyak4">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../gyak4" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../gyak4/src" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,60 @@
+CREATE OR REPLACE PROCEDURE PRINT_HISTOGRAM(p_owner VARCHAR, p_table VARCHAR, p_col VARCHAR) IS
+cnt INTEGER:=0;
+max_value INTEGER:=0;
+div_value NUMBER:=1;
+exc EXCEPTION;
+str_temp VARCHAR(2000);
+str_key VARCHAR(200);
+str_out VARCHAR(2000):='';
+value NUMBER:=0;
+max_length INTEGER:=0;
+TYPE CurTyp IS REF CURSOR;
+v_cursor CurTyp;
+BEGIN
+	BEGIN
+		str_temp:='SELECT COUNT(DISTINCT '||UPPER(p_col)||') FROM '||UPPER(p_owner)||'.'||UPPER(p_table)||'';
+	EXECUTE IMMEDIATE str_temp INTO cnt;
+	IF cnt = 0 THEN
+		dbms_output.put_line('Ures oszlop!');
+		RETURN;
+	ELSIF cnt > 100 THEN 
+		dbms_output.put_line('Tul sok kulonbozo adat!');
+		RETURN;
+	END IF;
+	EXCEPTION
+   		WHEN others THEN 
+      		dbms_output.put_line('Rossz tabla nev es/vagy rossz oszlopnev es/vagy rossz tulajdonosnev!');
+      		dbms_output.put_line('Hibakod: '||SQLCODE);
+	END;
+	BEGIN
+		str_temp:='SELECT MAX(COUNT(*))
+					FROM ' ||UPPER(p_owner)||'.'||UPPER(p_table)||'
+					WHERE '||UPPER(p_col)||' IS NOT NULL
+					GROUP BY ' ||UPPER(p_col)||'';
+		EXECUTE IMMEDIATE str_temp INTO max_value;
+		IF max_value>100 THEN div_value:= max_value/50;
+		END IF;
+	END;
+	BEGIN
+		str_temp:='SELECT MAX(LENGTH('||UPPER(p_col)||')) FROM '||UPPER(p_owner)||'.'||UPPER(p_table);
+		EXECUTE IMMEDIATE str_temp INTO max_length;
+	END;
+	BEGIN
+		str_temp:='SELECT ' ||UPPER(p_col)||', COUNT(*) db
+					FROM ' ||UPPER(p_owner)||'.'||UPPER(p_table)||'
+					WHERE '||UPPER(p_col)||' IS NOT NULL
+					GROUP BY '||UPPER(p_col)||' ORDER BY '||UPPER(p_col)||' ASC';
+		OPEN v_cursor FOR str_temp;
+		LOOP
+        	FETCH v_cursor INTO str_key, value;
+        	EXIT WHEN v_cursor%NOTFOUND;
+        	FOR i IN 1..CEIL(value/div_value)
+        		LOOP
+        			str_out:=CONCAT(str_out,'*');
+        		END LOOP;
+        	dbms_output.put_line(RPAD(str_key,max_length+3,' ') ||'--> '|| str_out);
+        	str_out:='';
+    	END LOOP;
+    	CLOSE v_cursor;
+	END;
+END PRINT_HISTOGRAM;

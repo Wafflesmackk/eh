@@ -1,0 +1,14 @@
+Bemenet:
+
+Budapest	2021/04/22	3	hollo	2	galamb	18	rigo	10		
+Budakalasz	2021/05/01	6	cinke	20						
+Borzsony	2021/05/12	5	rigo	3	heja	2	galamb	10	solyom	1
+Budakalasz	2021/06/13	5	fecske	20	cinke	10				
+Budapest	2021/07/22	7	galamb	10	rigo 	10	cinke	10		
+Pomaz		2021/08/01	5	gerle	2	cinke	10	rigo	10	fecske	10
+
+Kimenet:
+
+2
+32 Pomaz 2021/08/01 igaz
+

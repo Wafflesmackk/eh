@@ -1,0 +1,4 @@
+2022.01.19	rend513	palacsinta	5	400	pizzaszelet	6	600	leves	4	1500			
+2022.01.05	rend115	palacsinta	5	400	pizzaszelet	6	600						
+2022.01.15	rend271	palacsinta	2	400	pizzaszelet	6	600	leves	4	1500			
+2022.02.14	rend883	pizzaszelet	6	600	aranygaluska	5	400	leves	4	1500	kenyér	4	100
